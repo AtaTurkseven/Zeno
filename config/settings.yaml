@@ -49,3 +49,19 @@ vision:
 
 ui:
   mode: cli               # "cli" or "gui"
+
+# Real-time voice call system (zeno/audio/CallSystem)
+# Requires: pip install sounddevice kokoro
+# Start: asyncio.run(CallSystem(**call).start())
+call:
+  whisper_host: http://localhost:9000   # whisper.cpp server
+  whisper_language: en
+  ollama_host: http://localhost:11434
+  ollama_model: llama3
+  ollama_timeout: 60
+  tts_voice: af_heart                  # Kokoro voice ID
+  sample_rate: 16000
+  silence_threshold: 200               # RMS energy VAD threshold
+  speech_timeout_s: 1.2
+  system_prompt: "You are Zeno, a modular physical AI assistant."
+

@@ -19,6 +19,7 @@ Zeno is a modular physical AI assistant system with robotic interaction, local +
 | Camera (vision) | ✅ | OpenCV capture with graceful fallback |
 | Voice listener | ✅ | SpeechRecognition / Google STT with fallback |
 | Voice speaker | ✅ | pyttsx3 offline TTS with fallback |
+| Real-time voice call | ✅ | Async pipeline: whisper.cpp STT → Ollama LLM → Kokoro TTS |
 
 ---
 
@@ -38,6 +39,9 @@ pip install opencv-python-headless>=4.8
 
 # Voice (speech recognition + text-to-speech)
 pip install SpeechRecognition pyaudio pyttsx3
+
+# Real-time voice call system
+pip install sounddevice kokoro
 ```
 
 ### 2. Configure
@@ -68,6 +72,12 @@ python main.py --config config/local_settings.yaml --ui cli
 
 ```
 zeno/
+├── audio/           # Real-time voice call pipeline
+│   ├── mic_stream.py    # Continuous mic capture + VAD (sounddevice)
+│   ├── whisper_stt.py   # STT via whisper.cpp HTTP server
+│   ├── kokoro_tts.py    # TTS via Kokoro subprocess
+│   ├── speaker.py       # Non-blocking WAV playback
+│   └── call_system.py   # CallSystem async orchestrator
 ├── core/
 │   ├── ai/          # AIBase, LocalLLM (Ollama), CloudAI (OpenAI/Anthropic)
 │   ├── memory/      # VectorStore — in-memory cosine-similarity search
@@ -108,6 +118,62 @@ Register it in `main.py` inside `_build_tool_system()`:
 ```python
 registry.register(MyTool())
 ```
+
+---
+
+## Real-Time Voice Call System
+
+The `zeno/audio/` package implements a full-duplex async voice pipeline:
+
+```
+Microphone → VAD → whisper.cpp STT → Ollama LLM → Kokoro TTS → Speaker
+```
+
+### Prerequisites
+
+| Service | How to start |
+|---------|-------------|
+| **whisper.cpp server** | `./server -m models/ggml-base.en.bin --port 9000` |
+| **Ollama** | `ollama serve && ollama pull llama3` |
+| **Kokoro TTS** | `pip install kokoro` |
+| **sounddevice** | `pip install sounddevice` |
+
+### Usage
+
+```python
+import asyncio
+from zeno.audio import CallSystem
+
+cs = CallSystem(
+    whisper_host="http://localhost:9000",
+    ollama_host="http://localhost:11434",
+    ollama_model="llama3",
+    tts_voice="af_heart",
+    system_prompt="You are Zeno, a helpful physical AI assistant.",
+)
+asyncio.run(cs.start())
+```
+
+Or via the config file (see `config/settings.yaml`, `call:` section):
+
+```python
+from zeno.config.manager import ConfigManager
+from zeno.audio import CallSystem
+import asyncio
+
+cfg = ConfigManager().get_section("call")
+cs = CallSystem(**cfg)
+asyncio.run(cs.start())
+```
+
+### Pipeline flow
+
+1. `MicStream` captures audio continuously via `sounddevice.InputStream`.
+2. Energy-based VAD segments speech from silence.
+3. `WhisperSTT` POSTs the WAV segment to the whisper.cpp `/inference` endpoint.
+4. `CallSystem.ask_llm()` sends the transcript to Ollama, maintaining conversation history.
+5. `KokoroTTS` generates speech audio via the Kokoro subprocess.
+6. `Speaker` plays the WAV through the output device without blocking the loop.
 
 ---
 
