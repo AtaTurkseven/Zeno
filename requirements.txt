@@ -2,3 +2,11 @@ pyyaml>=6.0
 pyserial>=3.5
 numpy>=1.24
 requests>=2.31
+
+# Optional — Vision support (camera capture)
+# opencv-python-headless>=4.8
+
+# Optional — Voice support (speech recognition + text-to-speech)
+# SpeechRecognition>=3.10
+# pyaudio>=0.2.13
+# pyttsx3>=2.90

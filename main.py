@@ -59,12 +59,16 @@ def _build_memory(config: ConfigManager):
 
 def _build_tool_system(config: ConfigManager):
     """Build and return ``(ToolRegistry, ToolExecutor)`` with built-in tools."""
+    from zeno.core.tools.builtin import CalculatorTool, EchoTool, TimeTool
     from zeno.core.tools.executor import ToolExecutor
     from zeno.core.tools.registry import ToolRegistry
 
     registry = ToolRegistry()
     executor = ToolExecutor(registry)
-    # TODO: Register domain-specific tools here.
+
+    for tool in (CalculatorTool(), EchoTool(), TimeTool()):
+        registry.register(tool)
+
     return registry, executor
 
 

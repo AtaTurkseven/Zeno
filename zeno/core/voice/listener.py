@@ -76,37 +76,71 @@ class VoiceListener:
     # Extension points
     # ------------------------------------------------------------------
 
-    def _capture_audio(self) -> bytes | None:
-        """Capture a single utterance from the microphone.
+    def _capture_audio(self) -> Any | None:
+        """Capture a single utterance from the microphone using *SpeechRecognition*.
 
         Returns
         -------
-        bytes or None
-            Raw PCM audio bytes, or ``None`` when no speech was detected.
-
-        .. todo::
-            Implement with ``pyaudio`` or ``sounddevice``.
+        sr.AudioData or None
+            A ``speech_recognition.AudioData`` object, or ``None`` when no
+            speech was detected or when *SpeechRecognition* / *PyAudio* are
+            not installed.
         """
-        # TODO: Implement audio capture.
-        logger.debug("VoiceListener._capture_audio() — not yet implemented.")
-        return None
+        try:
+            import speech_recognition as sr  # type: ignore[import-untyped]
+        except ImportError:
+            logger.warning(
+                "SpeechRecognition is not installed.  "
+                "Install it with: pip install SpeechRecognition pyaudio"
+            )
+            return None
 
-    def _transcribe_audio(self, audio: bytes) -> str:
-        """Convert raw PCM *audio* to text.
+        recognizer = sr.Recognizer()
+        mic_index: int | None = None
+        if isinstance(self._device, int):
+            mic_index = self._device
+
+        try:
+            with sr.Microphone(device_index=mic_index) as source:
+                logger.debug("VoiceListener adjusting for ambient noise…")
+                recognizer.adjust_for_ambient_noise(source, duration=0.5)
+                logger.debug("VoiceListener listening for speech…")
+                audio = recognizer.listen(source, timeout=5, phrase_time_limit=15)
+            return audio
+        except sr.WaitTimeoutError:
+            logger.debug("VoiceListener timed out waiting for speech.")
+            return None
+        except OSError as exc:
+            logger.error("VoiceListener microphone error: %s", exc)
+            return None
+
+    def _transcribe_audio(self, audio: Any) -> str:
+        """Transcribe *audio* using the Google Web Speech API.
 
         Parameters
         ----------
         audio:
-            Raw PCM audio bytes returned by :meth:`_capture_audio`.
+            A ``speech_recognition.AudioData`` object returned by
+            :meth:`_capture_audio`.
 
         Returns
         -------
         str
-            Transcribed text.
-
-        .. todo::
-            Implement with a chosen STT engine.
+            Transcribed text, or an empty string when transcription fails.
         """
-        # TODO: Implement transcription.
-        logger.debug("VoiceListener._transcribe_audio() — not yet implemented.")
-        return ""
+        try:
+            import speech_recognition as sr  # type: ignore[import-untyped]
+        except ImportError:
+            return ""
+
+        recognizer = sr.Recognizer()
+        try:
+            text: str = recognizer.recognize_google(audio, language=self._language)
+            logger.info("VoiceListener transcribed: %r", text)
+            return text
+        except sr.UnknownValueError:
+            logger.debug("VoiceListener could not understand audio.")
+            return ""
+        except sr.RequestError as exc:
+            logger.error("VoiceListener STT request failed: %s", exc)
+            return ""

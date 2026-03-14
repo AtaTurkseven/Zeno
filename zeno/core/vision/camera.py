@@ -120,7 +120,7 @@ class Camera:
     # ------------------------------------------------------------------
 
     def _open_capture(self, index: int) -> Any:
-        """Open the underlying capture device.
+        """Open the underlying capture device using OpenCV.
 
         Parameters
         ----------
@@ -130,31 +130,39 @@ class Camera:
         Returns
         -------
         Any
-            An opaque capture handle (e.g. ``cv2.VideoCapture``), or ``None``
-            on failure.
-
-        .. todo::
-            Implement with ``cv2.VideoCapture(index)``.
+            A ``cv2.VideoCapture`` handle, or ``None`` on failure (including
+            when OpenCV is not installed).
         """
-        # TODO: Implement with OpenCV: return cv2.VideoCapture(index)
-        logger.debug("Camera._open_capture() — not yet implemented.")
-        return None
+        try:
+            import cv2  # type: ignore[import-untyped]
+        except ImportError:
+            logger.warning(
+                "opencv-python is not installed.  "
+                "Install it with: pip install opencv-python-headless"
+            )
+            return None
+
+        cap = cv2.VideoCapture(index)
+        if not cap.isOpened():
+            logger.error("OpenCV could not open camera index=%d.", index)
+            cap.release()
+            return None
+
+        cap.set(cv2.CAP_PROP_FRAME_WIDTH, self._width)
+        cap.set(cv2.CAP_PROP_FRAME_HEIGHT, self._height)
+        return cap
 
     def _read_frame(self, capture: Any) -> Frame | None:
-        """Read one frame from *capture*.
+        """Read one frame from an open ``cv2.VideoCapture``."""
+        import time
 
-        .. todo::
-            Implement with ``capture.read()``.
-        """
-        # TODO: Implement with OpenCV: ret, img = capture.read()
-        logger.debug("Camera._read_frame() — not yet implemented.")
-        return None
+        ret, img = capture.read()
+        if not ret or img is None:
+            logger.warning("Camera._read_frame() failed to grab frame.")
+            return None
+        height, width = img.shape[:2]
+        return Frame(data=img, width=width, height=height, timestamp=time.monotonic())
 
     def _release_capture(self, capture: Any) -> None:
-        """Release *capture*.
-
-        .. todo::
-            Implement with ``capture.release()``.
-        """
-        # TODO: Implement with OpenCV: capture.release()
-        logger.debug("Camera._release_capture() — not yet implemented.")
+        """Release a ``cv2.VideoCapture`` handle."""
+        capture.release()

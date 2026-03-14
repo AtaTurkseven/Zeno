@@ -62,18 +62,41 @@ class VoiceSpeaker:
     # ------------------------------------------------------------------
 
     def _synthesise(self, text: str) -> bytes | None:
-        """Convert *text* to raw PCM audio bytes.
+        """Convert *text* to speech using *pyttsx3* (offline TTS).
 
         Returns
         -------
         bytes or None
-            Audio data, or ``None`` to skip playback.
-
-        .. todo::
-            Implement with pyttsx3, gTTS, Coqui TTS, or similar.
+            ``None`` when *pyttsx3* handles playback internally, or when
+            the library is not installed (fallback: log only).
         """
-        # TODO: Implement TTS synthesis.
-        logger.debug("VoiceSpeaker._synthesise() — not yet implemented.")
+        try:
+            import pyttsx3  # type: ignore[import-untyped]
+        except ImportError:
+            logger.warning(
+                "pyttsx3 is not installed.  "
+                "Install it with: pip install pyttsx3"
+            )
+            return None
+
+        try:
+            engine = pyttsx3.init()
+            # Apply language hint as voice selection if possible
+            voices = engine.getProperty("voices")
+            lang_prefix = self._language.split("-")[0].lower()
+            for voice in voices or []:
+                vid: str = getattr(voice, "id", "") or ""
+                if lang_prefix in vid.lower():
+                    engine.setProperty("voice", vid)
+                    break
+            engine.say(text)
+            engine.runAndWait()
+            engine.stop()
+        except RuntimeError as exc:
+            logger.error("VoiceSpeaker pyttsx3 runtime error: %s", exc)
+        except OSError as exc:
+            logger.error("VoiceSpeaker audio device error: %s", exc)
+        # pyttsx3 plays audio directly; no bytes to return.
         return None
 
     def _play(self, audio: bytes) -> None:
@@ -82,10 +105,7 @@ class VoiceSpeaker:
         Parameters
         ----------
         audio:
-            Audio bytes to play.
-
-        .. todo::
-            Implement with ``pyaudio`` or ``sounddevice``.
+            Audio bytes to play.  When *pyttsx3* is used, playback is handled
+            inside :meth:`_synthesise` and this method is never called.
         """
-        # TODO: Implement audio playback.
-        logger.debug("VoiceSpeaker._play() — not yet implemented.")
+        logger.debug("VoiceSpeaker._play() — raw PCM playback not implemented.")
