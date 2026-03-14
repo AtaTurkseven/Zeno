@@ -1,0 +1,51 @@
+# Zeno system configuration
+
+system:
+  name: Zeno
+  version: "0.1.0"
+  log_level: INFO
+  log_file: logs/zeno.log
+
+ai:
+  backend: local          # "local" or "cloud"
+  local:
+    model: llama3          # Ollama model name
+    host: http://localhost:11434
+    timeout: 60
+  cloud:
+    provider: openai       # "openai" or "anthropic"
+    api_key_env: OPENAI_API_KEY
+    model: gpt-4o
+    timeout: 30
+
+memory:
+  backend: in_memory       # "in_memory" or "chroma"
+  embedding_dim: 384
+  max_entries: 10000
+
+hardware:
+  default_baud_rate: 115200
+  connection_timeout: 5
+
+devices:
+  esp32:
+    port: /dev/ttyUSB0
+    baud_rate: 115200
+  robotic_arm:
+    port: /dev/ttyUSB1
+    baud_rate: 9600
+    dof: 6                  # degrees of freedom
+
+voice:
+  enabled: false
+  input_device: default
+  output_device: default
+  language: en-US
+
+vision:
+  enabled: false
+  camera_index: 0
+  resolution: [640, 480]
+
+ui:
+  mode: cli               # "cli" or "gui"
