@@ -1,0 +1,44 @@
+llm:
+  provider: ollama
+  model: malixator/ZenoV1         # Good at code/embedded. Alternatives on disk: mistral:7b, gemma3:4b, qwen3:1.7b (fast)
+  base_url: http://localhost:11434
+  timeout: 90              # seconds; increase on slow hardware
+
+project:
+  max_file_size_kb: 150    # skip files larger than this
+  include_extensions:
+    - .py
+    - .ino
+    - .cpp
+    - .c
+    - .h
+    - .md
+    - .txt
+    - .log
+    - .json
+    - .yaml
+    - .yml
+    - .sh
+    - .rs
+    - .toml
+    - .cfg
+    - .ini
+  exclude_dirs:
+    - .git
+    - __pycache__
+    - node_modules
+    - .venv
+    - venv
+    - env
+    - build
+    - dist
+    - .pio
+    - .platformio
+
+memory:
+  path: ./memory
+  session_notes: SESSION_NOTES.md
+
+display:
+  card_width: 80
+  use_color: true

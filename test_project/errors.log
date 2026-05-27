@@ -1,0 +1,46 @@
+--- Serial monitor log: ESP32_MPU6050_Logger ---
+--- Captured: 2026-05-26 22:14:08 ---
+--- Baud: 115200 ---
+
+[BOOT] ESP32 MPU6050 Logger starting...
+[I2C] Scanning for MPU6050...
+[OK] MPU6050 connected.
+[DMP] Attempting DMP initialization...
+[ERROR] DMP init failed, error code: 1
+[BLE] Advertising started. UUID: 12345678-1234-1234-1234-123456789abc
+[BOOT] Setup complete.
+[IMU] roll=-1.23 pitch=2.11 ax=0.012 ay=-0.021 az=0.997
+[IMU] roll=-1.24 pitch=2.10 ax=0.011 ay=-0.021 az=0.998
+[IMU] roll=-1.22 pitch=2.12 ax=0.012 ay=-0.021 az=0.997
+[IMU] roll=-1.23 pitch=2.11 ax=0.012 ay=-0.021 az=0.997
+[BLE] Client connected
+[IMU] roll=-1.23 pitch=2.11 ax=0.012 ay=-0.021 ax=0.997
+[IMU] roll=12.45 pitch=8.33 ax=0.210 ay=0.145 az=0.965
+[IMU] roll=24.11 pitch=15.67 ax=0.420 ay=0.281 az=0.862
+[BLE] Tilt alert sent: TILT:24.1,15.7
+[IMU] roll=31.20 pitch=22.44 ax=0.521 ay=0.381 az=0.762
+[BLE] Tilt alert sent: TILT:31.2,22.4
+[MOTION] Motion interrupt fired.
+[IMU] roll=31.22 pitch=22.45 ax=0.521 ay=0.382 az=0.761
+[BLE] Client disconnected
+[IMU] roll=2.10 pitch=1.44 ax=0.032 ay=0.025 az=0.999
+
+--- 28 seconds elapsed ---
+
+Guru Meditation Error: Core  0 panic'ed (Interrupt wdt timeout on CPU0)
+
+Core  0 register dump:
+PC      : 0x400d5c3b  PS      : 0x00060034  A0      : 0x800d6018  A1      : 0x3ffc2550
+A2      : 0x00000000  A3      : 0x3ffc0000  A4      : 0x00000001  A5      : 0x3ffc2550
+
+Backtrace: 0x400d5c38:0x3ffc2550 0x400d5ffd:0x3ffc2570 0x400d1234:0x3ffc25a0
+
+ELF file SHA256: abc123def456
+
+Rebooting...
+ets Jun  8 2016 00:22:57
+rst:0xc (SW_CPU_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)
+configsip: 0, SPIWP:0xee
+mode:DIO, clock div:2
+load:0x3fff0030,len:1344
+[BOOT] ESP32 MPU6050 Logger starting...
