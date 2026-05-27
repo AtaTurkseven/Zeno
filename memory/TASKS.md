@@ -6,16 +6,18 @@ _Updated: 2026-05-27_
 
 ## TODAY
 
-- [ ] Install dependencies: `pip install -r requirements.txt`
-- [ ] Verify Ollama is installed: `ollama --version`
-- [ ] Pull mistral model: `ollama pull mistral` (or smaller: `ollama pull phi3`)
-- [ ] Run Demo 001: `python run.py ./test_project`
-- [ ] Verify project loads and tree displays correctly
+- [x] Install dependencies: `pip install -r requirements.txt`
+- [x] Verify Ollama is installed and reachable
+- [x] Configure a working local model in `config.yaml`
+- [x] Run Demo 001: `python run.py ./test_project`
+- [x] Verify project loads and tree displays correctly
+- [x] Add deterministic local analysis so core features survive LLM failures
+- [x] Test `:localsummary`, `:issues`, and `:inspect errors.log`
 - [ ] Ask 3 real questions about test_project, verify LLM response quality
 - [ ] Test `:note` command, verify SESSION_NOTES.md is written
 - [ ] Test `:summarize` command, verify PROJECT_SUMMARIES.md is written
-- [ ] Fix any bugs found during first run
-- [ ] Commit initial structure to GitHub: `git init && git add . && git commit -m "feat: Demo 001 bootstrap"`
+- [x] Fix bugs found during first run
+- [x] Commit and push workspace to GitHub
 
 ---
 
@@ -33,7 +35,7 @@ _Updated: 2026-05-27_
 - [ ] Ask: "What is causing this error and how do I fix it?"
 
 **Day 4 — Model comparison**
-- [ ] Try at least 2 models: mistral, phi3, codellama (if disk space allows)
+- [ ] Try at least 2 models: malixator/ZenoV1, qwen3:8b, mistral:7b
 - [ ] Document which model gives better embedded/Arduino answers
 - [ ] Update TECH_STACK.md with findings
 
@@ -70,6 +72,6 @@ _Updated: 2026-05-27_
 
 ## BLOCKED
 
-_Nothing blocked yet — record blockers here with reason_
+- [ ] Need user feedback on iteration target after Demo 001 reliability pass
 
 - Example format: `- [ ] [BLOCKED: need hardware X] Task description`

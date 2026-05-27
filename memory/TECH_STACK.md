@@ -11,6 +11,7 @@ _Only list tools that have been tested and verified. Mark untested as [PLANNED].
 | rich        | >=13.0   | Terminal UI (cards, panels)    | Active    |
 | requests    | >=2.28   | HTTP client for Ollama API     | Active    |
 | pyyaml      | >=6.0    | Config file parsing            | Active    |
+| re          | stdlib   | Local issue/log pattern scan   | Active    |
 | pyserial    | >=3.5    | Arduino serial reading         | PLANNED   |
 | whisper     | latest   | Local STT (OpenAI Whisper)     | PLANNED   |
 | pyttsx3     | >=2.90   | Local TTS (offline)            | PLANNED   |
@@ -23,12 +24,13 @@ _Only list tools that have been tested and verified. Mark untested as [PLANNED].
 
 | Model                  | Size   | Use case                           | Status    |
 |------------------------|--------|------------------------------------|-----------|
-| qwen3:8b               | 5.2 GB | **Default** — strong at code/embedded | Available |
+| malixator/ZenoV1       | 7.2 GB | **Configured now** — custom Zeno model | Active |
+| qwen3:8b               | 5.2 GB | Strong at code/embedded            | Available |
 | mistral:7b             | 4.4 GB | General + code                     | Available |
 | gemma3:4b              | 3.3 GB | Fast, lighter CPU load             | Available |
 | qwen3:1.7b             | 1.4 GB | Fast responses, weak at deep code  | Available |
 | zeno-gemma4-e4b:latest | 9.6 GB | Custom Zeno model — test it        | Available |
-| malixator/ZenoV1:latest| 7.2 GB | Custom — unknown quality           | Available |
+| gemma3:270m            | 291 MB | Tiny test model                    | Available |
 
 ---
 
@@ -46,7 +48,7 @@ _Only list tools that have been tested and verified. Mark untested as [PLANNED].
 
 | Layer      | Tool              | Status    |
 |------------|-------------------|-----------|
-| Phase 1    | rich (terminal)   | Active    |
+| Phase 1    | rich (terminal HUD cards) | Active |
 | Phase 3    | TBD (tkinter / pygame / electron) | PLANNED |
 | Phase 5    | Custom AR protocol | PLANNED  |
 
@@ -83,3 +85,4 @@ _Record confirmed bugs and limitations here_
 - Ollama response time on CPU: 30-90s for mistral-7B. Acceptable for Phase 1. Will need optimization or model switch for voice mode.
 - Context window: hard-capped at 14000 chars in scanner.py. Large projects will be truncated. Monitor and tune.
 - Windows path handling: scanner.py uses pathlib — should be cross-platform but test on Windows explicitly.
+- Deterministic analyzer is heuristic-based. It is strong for obvious issues and logs, but not a substitute for real semantic code understanding.

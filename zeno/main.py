@@ -11,6 +11,14 @@ from .config import load_config
 from .scanner import scan_project, build_context_text
 from .llm import query_ollama, check_ollama
 from .memory import append_session_note, save_project_summary
+from .analyzer import (
+    answer_without_llm,
+    format_issues,
+    inspect_file,
+    summarize_logs,
+    summarize_project,
+    detect_issues,
+)
 from . import cards
 
 console = Console()
@@ -48,6 +56,7 @@ def main():
     # Initial project load
     project = None
     context_text = ""
+    last_response = ""
     try:
         cards.print_status(f"Scanning: {project_path}")
         project, context_text = _load_project(project_path, config)
@@ -86,6 +95,7 @@ def main():
                 try:
                     cards.print_status(f"Loading: {arg}")
                     project, context_text = _load_project(arg, config)
+                    last_response = ""
                     cards.print_project_summary(project)
                 except FileNotFoundError as e:
                     cards.print_error(str(e))
@@ -106,12 +116,50 @@ def main():
                 else:
                     cards.print_error("No project loaded.")
 
+            elif cmd == ":inspect":
+                if not project:
+                    cards.print_error("No project loaded.")
+                    continue
+                if not arg:
+                    cards.print_error("Usage: :inspect <file>")
+                    continue
+                last_response = inspect_file(project, arg)
+                cards.print_card("FILE INSPECT", last_response, style="magenta")
+
+            elif cmd == ":issues":
+                if not project:
+                    cards.print_error("No project loaded.")
+                    continue
+                last_response = format_issues(detect_issues(project))
+                cards.print_card("DETECTED ISSUES", last_response, style="yellow")
+
+            elif cmd == ":logs":
+                if not project:
+                    cards.print_error("No project loaded.")
+                    continue
+                last_response = summarize_logs(project)
+                cards.print_card("LOG SUMMARY", last_response, style="red")
+
+            elif cmd == ":localsummary":
+                if not project:
+                    cards.print_error("No project loaded.")
+                    continue
+                last_response = summarize_project(project)
+                cards.print_card("LOCAL SUMMARY", last_response, style="green")
+
             elif cmd == ":note":
                 if not arg:
                     cards.print_error("Usage: :note <text>")
                     continue
                 path = append_session_note(arg, config)
                 cards.print_status(f"[green]Note saved → {path}[/green]")
+
+            elif cmd == ":save":
+                if not last_response:
+                    cards.print_error("No response available to save yet.")
+                    continue
+                path = append_session_note(last_response, config)
+                cards.print_status(f"[green]Last response saved → {path}[/green]")
 
             elif cmd == ":summarize":
                 if not project:
@@ -124,6 +172,7 @@ def main():
                     "and suggested next steps. Be specific to this project's actual contents."
                 )
                 response = query_ollama(summary_prompt, context_text, config)
+                last_response = response
                 cards.print_response(response)
                 save_project_summary(project["name"], response, config)
                 cards.print_status(f"[green]Summary saved → memory/PROJECT_SUMMARIES.md[/green]")
@@ -149,6 +198,16 @@ def main():
                 cards.print_error("No project loaded. Use :load <path>")
                 continue
 
-            cards.print_status("[dim]Thinking...[/dim]")
-            response = query_ollama(user_input, context_text, config)
+            fallback = answer_without_llm(user_input, project)
+            ok, _ = check_ollama(config)
+
+            if not ok and fallback:
+                response = fallback
+            else:
+                cards.print_status("[dim]Thinking...[/dim]")
+                response = query_ollama(user_input, context_text, config)
+                if response.startswith("[") and fallback:
+                    response = response + "\n\nFallback analysis:\n" + fallback
+
+            last_response = response
             cards.print_response(response)

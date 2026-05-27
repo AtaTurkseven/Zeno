@@ -78,3 +78,23 @@ The core operation — "read files, build prompt, call LLM, display response" �
 Do not add a framework to do what 50 lines can do.
 
 **Revisit:** Phase 3+ if multi-agent orchestration is genuinely needed.
+
+---
+
+## 2026-05-27 — Add Deterministic Local Analysis Layer
+
+**Decision:** Add a local analyzer for summary, issue detection, log extraction, and file inspection instead of relying only on the LLM.
+
+**Why:**
+Project-aware assistance should not collapse when the LLM is unavailable, slow, or simply wrong.
+The assistant needs a reliable floor before it gets a clever ceiling.
+
+**Alternatives rejected:**
+- Pure LLM-only flow: too brittle for a maker tool that has to work during debugging.
+- Full AST/parser stack for every supported language: too much complexity for Demo 001.
+- External indexing/vector stack: useful later, unnecessary for the first usable version.
+
+**Risk:** Heuristics can miss subtle bugs and give a false sense of certainty.
+**Mitigation:** Keep local analysis narrow, direct, and obviously scoped. Use it as fallback and quick triage, not as magic.
+
+**Revisit:** When Phase 2 adds live serial/log streaming and the query surface becomes more complex.

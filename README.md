@@ -13,7 +13,10 @@ Reads your project folder, understands your code, diagnoses errors, and answers 
 - Load any project folder (Arduino, ESP32, Python, C/C++)
 - Build a full context from your code, README, and log files
 - Answer engineering questions about the project via local LLM
-- Identify errors in log files
+- Fall back to deterministic local analysis when the LLM is unavailable or unhelpful
+- Identify errors in log files and extract crash lines
+- Inspect specific files with line-numbered excerpts
+- Run a local issue scan for obvious embedded/software faults
 - Save session notes and project summaries to `./memory/`
 - Display everything as clean terminal cards
 
@@ -41,18 +44,15 @@ ollama serve
 ### 3. Pull a model
 
 ```bash
-ollama pull mistral
+ollama pull malixator/ZenoV1
 ```
 
-Or use a lighter model on CPU-only hardware:
-```bash
-ollama pull phi3
-```
+Or use any installed local model and set it in `config.yaml`.
 
 If you change the model, update `config.yaml`:
 ```yaml
 llm:
-  model: phi3
+  model: malixator/ZenoV1
 ```
 
 ### 4. Run Zeno
@@ -73,8 +73,13 @@ python run.py /path/to/your/project  # load any real project
 | `:load <path>` | Load a different project folder |
 | `:tree` | Show project file tree |
 | `:files` | List all loaded files |
+| `:inspect <file>` | Show a file excerpt with line numbers |
+| `:issues` | Run deterministic issue detection |
+| `:logs` | Show extracted error lines from `.log` files |
+| `:localsummary` | Build a local summary without using the LLM |
 | `:summarize` | Ask Zeno to summarize the project |
 | `:note <text>` | Save a note to memory/SESSION_NOTES.md |
+| `:save` | Save the last response to SESSION_NOTES.md |
 | `:status` | Check Ollama connection |
 | `:clear` | Clear screen |
 | `:help` | Show command reference |
@@ -89,6 +94,7 @@ What does this project do?
 What libraries does this use?
 Why is the MPU6050 not responding?
 What is causing the error in errors.log?
+Why is the firmware crashing after BLE disconnect?
 How should I wire the SDA/SCL pins for this board?
 What is the next thing I should implement?
 Is there anything dangerous in this code?
@@ -102,7 +108,7 @@ Edit `config.yaml`:
 
 ```yaml
 llm:
-  model: mistral          # change to phi3, codellama, qwen2.5-coder, etc.
+  model: malixator/ZenoV1 # change to any model you already have in Ollama
   timeout: 90             # increase on slow CPU hardware
 
 project:

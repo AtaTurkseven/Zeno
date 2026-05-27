@@ -4,6 +4,43 @@ _Written like an engineering log. No marketing. Facts, decisions, results._
 
 ---
 
+## Entry 002 — 2026-05-27 — Demo 001 Made Usable
+
+**What happened:**
+Closed the largest reliability gap in Demo 001.
+The original scaffold depended too heavily on the LLM for basic project inspection, which meant the assistant became weak whenever the model was slow, wrong, or unavailable.
+
+**What was added:**
+- `zeno/analyzer.py` — deterministic local analysis layer
+- `:localsummary` — project summary without using the LLM
+- `:issues` — static issue scan for obvious faults
+- `:logs` — extracted error lines from `.log` files
+- `:inspect <file>` — line-numbered file excerpt card
+- `:save` — save the last response directly into session memory
+- LLM fallback path: if Ollama is unavailable or returns an error, Zeno now falls back to local analysis for common engineering questions
+
+**What was tested:**
+- Python syntax compile for all source files
+- Analyzer smoke test against `test_project`
+- Real CLI run with scripted commands:
+	- `:localsummary`
+	- `:issues`
+	- `:inspect errors.log`
+	- `:quit`
+
+**Observed result:**
+The CLI successfully loaded the project, displayed the new commands, produced a local issue summary, extracted the watchdog reset from `errors.log`, and rendered a line-numbered file inspection card.
+
+**What still needs proof:**
+- Q&A quality on a real project folder, not just the synthetic test project
+- `:summarize` output quality with the current model (`malixator/ZenoV1`)
+- Session memory write verification through `:save` in an interactive run
+
+**Next action:**
+Run Demo 001 on one real project folder and verify 3 answers against known facts before adding Phase 2 features.
+
+---
+
 ## Entry 001 — 2026-05-27 — Project Bootstrap
 
 **What happened:**

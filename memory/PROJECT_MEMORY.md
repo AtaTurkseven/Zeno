@@ -25,7 +25,7 @@ Long-term vision:
 ## Current Goal
 
 **Demo 001 — Project-Aware Zeno**
-A CLI assistant that reads a local project folder and answers engineering questions about it using a local Ollama LLM.
+A CLI assistant that reads a local project folder, inspects code/logs, answers engineering questions, and still provides deterministic local analysis when the LLM is unavailable or vague.
 
 ---
 
@@ -77,6 +77,8 @@ See FAILURES.md
 - Ollama integration via HTTP /api/generate
 - Rich terminal card output
 - Memory file system (markdown append)
+- Deterministic analyzer added: local summary, issue scan, log extraction, file inspection
+- Real CLI flow validated against test_project commands: `:localsummary`, `:issues`, `:inspect`
 
 ---
 
@@ -84,9 +86,10 @@ See FAILURES.md
 
 **Demo 001 — verified working**
 - [ ] Install dependencies: `pip install -r requirements.txt`
-- [ ] Pull Ollama model: `ollama pull mistral`
-- [ ] Run: `python run.py ./test_project`
-- [ ] Ask 3 engineering questions about test_project
+- [x] Run: `python run.py ./test_project`
+- [x] Verify deterministic local analysis commands on test_project
+- [ ] Ask 3 engineering questions about a real project folder
 - [ ] Save a session note
 - [ ] Run :summarize and verify output
-- [ ] Commit to GitHub with working demo video
+- [x] Commit initial workspace to GitHub
+- [ ] Push improved Demo 001 feature set to GitHub
