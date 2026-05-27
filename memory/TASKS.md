@@ -13,7 +13,7 @@ _Updated: 2026-05-27_
 - [x] Verify project loads and tree displays correctly
 - [x] Add deterministic local analysis so core features survive LLM failures
 - [x] Test `:localsummary`, `:issues`, and `:inspect errors.log`
-- [ ] Ask 3 real questions about test_project, verify LLM response quality
+- [ ] Ask 3 real questions about the actual Zeno workspace and get 3/3 sharp answers
 - [x] Test `:note` command, verify SESSION_NOTES.md is written
 - [x] Test `:capture` command, verify INTERACTIONS.md is written
 - [x] Test `:closeout` command, verify SESSION_CLOSEOUTS.md is written
@@ -31,7 +31,7 @@ _Updated: 2026-05-27_
 - [ ] Load a real Arduino or ESP32 project you have on disk
 - [ ] Ask Zeno about a real bug or a real design question
 - [ ] Compare Zeno's answer to what you actually know — is it accurate?
-- [ ] Document any hallucinations in FAILURES.md
+- [x] Document observed answer failure in FAILURES.md
 
 **Day 3 — Error/log detection**
 - [ ] Add a test with a real errors.log containing stack traces

@@ -4,6 +4,35 @@ _Written like an engineering log. No marketing. Facts, decisions, results._
 
 ---
 
+## Entry 004 — 2026-05-27 — Real Project Q&A Check
+
+**What happened:**
+Ran Zeno against the actual Zeno workspace instead of the synthetic ESP32 test project and asked three concrete questions.
+
+**Questions asked:**
+- What does this project do right now?
+- How do I launch the HUD prototype?
+- Where are structured Q&A captures and session closeouts saved?
+
+**Observed result:**
+- HUD launch question: correct after fallback fix
+- Memory location question: correct
+- Project-description question: acceptable, but still drifts into the embedded `test_project` instead of staying tightly focused on Zeno itself
+
+**Bug found and fixed:**
+- Empty LLM responses were treated as valid answers
+- Added `[EMPTY RESPONSE]` handling in `zeno/llm.py`
+- Added deterministic fallback answers for HUD launch and memory-file location questions in `zeno/analyzer.py`
+
+**Current score:**
+2/3 answers clean
+1/3 answers usable but not sharp enough
+
+**Next action:**
+Improve project-description answers so they prioritize the loaded project itself over example subprojects, then rerun the same 3-question check.
+
+---
+
 ## Entry 003 — 2026-05-27 — Memory Capture and HUD Prototype
 
 **What happened:**

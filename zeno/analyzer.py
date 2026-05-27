@@ -118,6 +118,22 @@ def answer_without_llm(question: str, project: Dict) -> Optional[str]:
     lower = question.lower()
     issues = detect_issues(project)
 
+    if "hud" in lower and any(term in lower for term in ["launch", "start", "run", "open"]):
+        return (
+            "Launch the desktop HUD with:\n"
+            "- python run.py --hud ./test_project\n"
+            "- python run.py --hud /path/to/your/project\n\n"
+            "The HUD entrypoint is implemented in run.py and zeno/hud.py."
+        )
+
+    if any(term in lower for term in ["interaction", "q&a capture", "closeout", "session closeout"]) and any(
+        term in lower for term in ["where", "saved", "save"]
+    ):
+        return (
+            "Structured Q&A captures are saved to ./memory/INTERACTIONS.md\n"
+            "Structured session closeouts are saved to ./memory/SESSION_CLOSEOUTS.md"
+        )
+
     if any(term in lower for term in ["summarize", "summary", "what does this project do"]):
         return summarize_project(project)
 

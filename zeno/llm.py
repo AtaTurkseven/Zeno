@@ -48,7 +48,10 @@ def query_ollama(prompt: str, context: str, config: dict) -> str:
         )
         resp.raise_for_status()
         data = resp.json()
-        return data.get("response", "[No response returned by model]").strip()
+        response_text = data.get("response", "").strip()
+        if not response_text:
+            return "[EMPTY RESPONSE] Model returned no text."
+        return response_text
 
     except requests.exceptions.ConnectionError:
         return (
