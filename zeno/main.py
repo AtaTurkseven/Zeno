@@ -10,7 +10,12 @@ from rich.console import Console
 from .config import load_config
 from .scanner import scan_project, build_context_text
 from .llm import query_ollama, check_ollama
-from .memory import append_session_note, save_project_summary
+from .memory import (
+    append_session_note,
+    save_interaction,
+    save_project_summary,
+    save_session_closeout,
+)
 from .analyzer import (
     answer_without_llm,
     format_issues,
@@ -57,6 +62,7 @@ def main():
     project = None
     context_text = ""
     last_response = ""
+    last_query = ""
     try:
         cards.print_status(f"Scanning: {project_path}")
         project, context_text = _load_project(project_path, config)
@@ -96,6 +102,7 @@ def main():
                     cards.print_status(f"Loading: {arg}")
                     project, context_text = _load_project(arg, config)
                     last_response = ""
+                    last_query = ""
                     cards.print_project_summary(project)
                 except FileNotFoundError as e:
                     cards.print_error(str(e))
@@ -161,6 +168,43 @@ def main():
                 path = append_session_note(last_response, config)
                 cards.print_status(f"[green]Last response saved → {path}[/green]")
 
+            elif cmd == ":capture":
+                if not project:
+                    cards.print_error("No project loaded.")
+                    continue
+                if not last_query or not last_response:
+                    cards.print_error("No completed Q&A available to capture yet.")
+                    continue
+                path = save_interaction(project["name"], last_query, last_response, config)
+                cards.print_status(f"[green]Interaction saved → {path}[/green]")
+
+            elif cmd == ":closeout":
+                if not project:
+                    cards.print_error("No project loaded.")
+                    continue
+                if not arg:
+                    cards.print_error(
+                        "Usage: :closeout changed | learned | broke | improve next | smallest demo | remove"
+                    )
+                    continue
+                parts = [part.strip() for part in arg.split("|")]
+                if len(parts) != 6:
+                    cards.print_error(
+                        "Closeout needs exactly 6 parts separated by '|': changed | learned | broke | improve next | smallest demo | remove"
+                    )
+                    continue
+                path = save_session_closeout(
+                    project["name"],
+                    parts[0],
+                    parts[1],
+                    parts[2],
+                    parts[3],
+                    parts[4],
+                    parts[5],
+                    config,
+                )
+                cards.print_status(f"[green]Closeout saved → {path}[/green]")
+
             elif cmd == ":summarize":
                 if not project:
                     cards.print_error("No project loaded.")
@@ -198,6 +242,7 @@ def main():
                 cards.print_error("No project loaded. Use :load <path>")
                 continue
 
+            last_query = user_input
             fallback = answer_without_llm(user_input, project)
             ok, _ = check_ollama(config)
 

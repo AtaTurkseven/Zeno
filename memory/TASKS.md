@@ -14,8 +14,12 @@ _Updated: 2026-05-27_
 - [x] Add deterministic local analysis so core features survive LLM failures
 - [x] Test `:localsummary`, `:issues`, and `:inspect errors.log`
 - [ ] Ask 3 real questions about test_project, verify LLM response quality
-- [ ] Test `:note` command, verify SESSION_NOTES.md is written
+- [x] Test `:note` command, verify SESSION_NOTES.md is written
+- [x] Test `:capture` command, verify INTERACTIONS.md is written
+- [x] Test `:closeout` command, verify SESSION_CLOSEOUTS.md is written
 - [ ] Test `:summarize` command, verify PROJECT_SUMMARIES.md is written
+- [x] Build minimal desktop HUD prototype
+- [ ] Manually test `python run.py --hud ./test_project`
 - [x] Fix bugs found during first run
 - [x] Commit and push workspace to GitHub
 
@@ -46,7 +50,7 @@ _Updated: 2026-05-27_
 
 **Day 6 — Polish + README**
 - [ ] Clean up any rough output formatting in cards.py
-- [ ] Finalize README.md with actual tested setup instructions
+- [x] Finalize README.md with current tested setup instructions
 - [ ] Record terminal session for demo video
 
 **Day 7 — Public commit**
@@ -62,7 +66,9 @@ _Updated: 2026-05-27_
 - [ ] TTS output (pyttsx3 or piper) — Phase 2
 - [ ] Serial port reader (pyserial) — real-time Arduino debug — Phase 2
 - [ ] Camera input (OpenCV) — Phase 3
-- [ ] HUD card UI (tkinter or pygame overlay) — Phase 3
+- [ ] Transparent overlay HUD behavior (always on top / borderless) — Phase 3
+- [ ] Add recent memory card to HUD — Phase 3
+- [ ] Add serial tail card to HUD — Phase 3
 - [ ] ESP32 glove BLE/ESP-NOW bridge — Phase 4
 - [ ] AR glasses HUD protocol design — Phase 5
 - [ ] Vector memory (Chroma/Qdrant) for long-term project memory — Phase 3+

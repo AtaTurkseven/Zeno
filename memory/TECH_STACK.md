@@ -12,6 +12,7 @@ _Only list tools that have been tested and verified. Mark untested as [PLANNED].
 | requests    | >=2.28   | HTTP client for Ollama API     | Active    |
 | pyyaml      | >=6.0    | Config file parsing            | Active    |
 | re          | stdlib   | Local issue/log pattern scan   | Active    |
+| tkinter     | stdlib   | Desktop HUD prototype          | Active    |
 | pyserial    | >=3.5    | Arduino serial reading         | PLANNED   |
 | whisper     | latest   | Local STT (OpenAI Whisper)     | PLANNED   |
 | pyttsx3     | >=2.90   | Local TTS (offline)            | PLANNED   |
@@ -49,7 +50,7 @@ _Only list tools that have been tested and verified. Mark untested as [PLANNED].
 | Layer      | Tool              | Status    |
 |------------|-------------------|-----------|
 | Phase 1    | rich (terminal HUD cards) | Active |
-| Phase 3    | TBD (tkinter / pygame / electron) | PLANNED |
+| Phase 3    | tkinter desktop HUD prototype | Active |
 | Phase 5    | Custom AR protocol | PLANNED  |
 
 ---
@@ -86,3 +87,4 @@ _Record confirmed bugs and limitations here_
 - Context window: hard-capped at 14000 chars in scanner.py. Large projects will be truncated. Monitor and tune.
 - Windows path handling: scanner.py uses pathlib — should be cross-platform but test on Windows explicitly.
 - Deterministic analyzer is heuristic-based. It is strong for obvious issues and logs, but not a substitute for real semantic code understanding.
+- Tkinter HUD is a plain desktop window, not yet an always-on-top transparent overlay.

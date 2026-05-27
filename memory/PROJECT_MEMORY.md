@@ -25,7 +25,7 @@ Long-term vision:
 ## Current Goal
 
 **Demo 001 — Project-Aware Zeno**
-A CLI assistant that reads a local project folder, inspects code/logs, answers engineering questions, and still provides deterministic local analysis when the LLM is unavailable or vague.
+A CLI assistant with a minimal desktop HUD option that reads a local project folder, inspects code/logs, answers engineering questions, and still provides deterministic local analysis when the LLM is unavailable or vague.
 
 ---
 
@@ -79,6 +79,8 @@ See FAILURES.md
 - Memory file system (markdown append)
 - Deterministic analyzer added: local summary, issue scan, log extraction, file inspection
 - Real CLI flow validated against test_project commands: `:localsummary`, `:issues`, `:inspect`
+- Structured memory capture added: `:capture` and `:closeout`
+- Desktop HUD prototype added via `python run.py --hud <project>`
 
 ---
 
@@ -89,7 +91,9 @@ See FAILURES.md
 - [x] Run: `python run.py ./test_project`
 - [x] Verify deterministic local analysis commands on test_project
 - [ ] Ask 3 engineering questions about a real project folder
-- [ ] Save a session note
+- [x] Save a session note
+- [x] Save a structured Q&A capture
+- [x] Save a structured session closeout
 - [ ] Run :summarize and verify output
 - [x] Commit initial workspace to GitHub
-- [ ] Push improved Demo 001 feature set to GitHub
+- [x] Push improved Demo 001 feature set to GitHub

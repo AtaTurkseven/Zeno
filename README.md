@@ -17,8 +17,9 @@ Reads your project folder, understands your code, diagnoses errors, and answers 
 - Identify errors in log files and extract crash lines
 - Inspect specific files with line-numbered excerpts
 - Run a local issue scan for obvious embedded/software faults
-- Save session notes and project summaries to `./memory/`
+- Save session notes, structured Q&A captures, and session closeouts to `./memory/`
 - Display everything as clean terminal cards
+- Launch a minimal desktop HUD prototype with project status, issues, and last answer cards
 
 ---
 
@@ -61,6 +62,7 @@ llm:
 python run.py                        # prompts for project path
 python run.py ./test_project         # load the included test project
 python run.py /path/to/your/project  # load any real project
+python run.py --hud ./test_project   # desktop HUD prototype
 ```
 
 ---
@@ -80,6 +82,8 @@ python run.py /path/to/your/project  # load any real project
 | `:summarize` | Ask Zeno to summarize the project |
 | `:note <text>` | Save a note to memory/SESSION_NOTES.md |
 | `:save` | Save the last response to SESSION_NOTES.md |
+| `:capture` | Save the last Q&A to memory/INTERACTIONS.md |
+| `:closeout a|b|c|d|e|f` | Save a structured session closeout |
 | `:status` | Check Ollama connection |
 | `:clear` | Clear screen |
 | `:help` | Show command reference |
@@ -145,6 +149,8 @@ Zeno keeps all notes in `./memory/`:
 | `ROADMAP.md` | Phase-by-phase roadmap |
 | `TECH_STACK.md` | Tools, models, protocols |
 | `SESSION_NOTES.md` | Notes saved during sessions |
+| `INTERACTIONS.md` | Structured Q&A captures |
+| `SESSION_CLOSEOUTS.md` | End-of-session structured closeouts |
 | `PROJECT_SUMMARIES.md` | Auto-generated project summaries |
 
 ---

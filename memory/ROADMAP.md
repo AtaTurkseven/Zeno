@@ -56,6 +56,11 @@ _This is not a timeline. It is a dependency graph. Each phase produces a working
 - Camera feed thumbnail (USB camera, OpenCV)
 - Click-to-query mode
 
+**Prototype status:**
+- Plain Tkinter desktop window exists now as a pre-phase prototype
+- Current cards: project status, issues, last answer
+- Not yet transparent, always-on-top, or camera-enabled
+
 **Exit criteria:**
 - [ ] HUD visible while working in Arduino IDE or VSCode
 - [ ] Camera thumbnail updating in real time

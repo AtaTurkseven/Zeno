@@ -84,6 +84,8 @@ def print_help():
         "  [white]:localsummary[/white]      Build a local summary without using the LLM\n"
         "  [white]:note <text>[/white]       Save a note to memory/SESSION_NOTES.md\n"
         "  [white]:save[/white]              Save the last response to SESSION_NOTES.md\n"
+        "  [white]:capture[/white]           Save the last Q&A to memory/INTERACTIONS.md\n"
+        "  [white]:closeout a|b|c|d|e|f[/white] Save a structured session closeout\n"
         "  [white]:summarize[/white]         Ask Zeno to summarize the project and save it\n"
         "  [white]:status[/white]            Check Ollama connection and model\n"
         "  [white]:clear[/white]             Clear screen\n"

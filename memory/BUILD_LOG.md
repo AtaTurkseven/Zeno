@@ -4,6 +4,42 @@ _Written like an engineering log. No marketing. Facts, decisions, results._
 
 ---
 
+## Entry 003 — 2026-05-27 — Memory Capture and HUD Prototype
+
+**What happened:**
+Implemented the next two priorities in order: better memory capture, then a minimal HUD prototype.
+
+**What was added:**
+- `:capture` — saves the last question and answer to `memory/INTERACTIONS.md`
+- `:closeout` — saves a structured session closeout to `memory/SESSION_CLOSEOUTS.md`
+- `zeno/hud.py` — Tkinter-based desktop HUD prototype
+- `python run.py --hud <project_path>` — alternate entrypoint for the HUD
+
+**HUD card set in this prototype:**
+- Project status
+- Detected issues
+- Last answer
+- Ollama status embedded in project card
+
+**What was tested:**
+- Python syntax compile including `zeno/hud.py`
+- Real CLI run verifying `:capture` and `:closeout`
+- File creation checks for `INTERACTIONS.md` and `SESSION_CLOSEOUTS.md`
+- Functional smoke test of `build_hud_state()` against `test_project`
+
+**Observed result:**
+The assistant can now persist structured interactions and session closeouts, and the HUD state builder produces live project/issue/answer data from the same core logic as the CLI.
+
+**What still needs proof:**
+- Manual usability check of the Tkinter HUD window during an actual workflow
+- Whether the HUD should remain a plain window or move toward a transparent overlay
+- Whether the current cards are the right ones for live debugging
+
+**Next action:**
+Open the HUD window against a real project folder and decide whether to push toward overlay behavior or richer debugging cards.
+
+---
+
 ## Entry 002 — 2026-05-27 — Demo 001 Made Usable
 
 **What happened:**

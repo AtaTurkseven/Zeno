@@ -46,3 +46,54 @@ def save_project_summary(project_name: str, summary: str, config: dict) -> Path:
         f.write(f"## {project_name} — {timestamp}\n\n{summary.strip()}\n\n---\n\n")
 
     return summaries_file
+
+
+def save_interaction(project_name: str, query: str, response: str, config: dict) -> Path:
+    """Append a structured Q&A interaction to INTERACTIONS.md."""
+    mem_dir = get_memory_dir(config)
+    interactions_file = mem_dir / "INTERACTIONS.md"
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M")
+    is_new = not interactions_file.exists()
+
+    with open(interactions_file, "a", encoding="utf-8") as f:
+        if is_new:
+            f.write("# Zeno Interactions\n\n")
+        f.write(f"## {timestamp} — {project_name}\n\n")
+        f.write("### Query\n")
+        f.write(query.strip() + "\n\n")
+        f.write("### Response\n")
+        f.write(response.strip() + "\n\n")
+        f.write("---\n\n")
+
+    return interactions_file
+
+
+def save_session_closeout(
+    project_name: str,
+    changed: str,
+    learned: str,
+    broke: str,
+    improve_next: str,
+    smallest_demo: str,
+    remove_overcomplicated: str,
+    config: dict,
+) -> Path:
+    """Append a structured end-of-session closeout entry."""
+    mem_dir = get_memory_dir(config)
+    closeout_file = mem_dir / "SESSION_CLOSEOUTS.md"
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M")
+    is_new = not closeout_file.exists()
+
+    with open(closeout_file, "a", encoding="utf-8") as f:
+        if is_new:
+            f.write("# Zeno Session Closeouts\n\n")
+        f.write(f"## {timestamp} — {project_name}\n\n")
+        f.write(f"- What changed? {changed.strip()}\n")
+        f.write(f"- What did we learn? {learned.strip()}\n")
+        f.write(f"- What broke? {broke.strip()}\n")
+        f.write(f"- What should be improved next? {improve_next.strip()}\n")
+        f.write(f"- What is the smallest next shippable demo? {smallest_demo.strip()}\n")
+        f.write(f"- What should be removed because it is overcomplicated? {remove_overcomplicated.strip()}\n\n")
+        f.write("---\n\n")
+
+    return closeout_file
